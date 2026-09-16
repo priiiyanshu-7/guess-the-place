@@ -32,7 +32,7 @@
   .dl{display:inline-flex;align-items:center;gap:7px;background:#fff;color:var(--ink);border:0;
     border-radius:12px;padding:5px 13px 5px 5px;font:inherit;font-size:12px;font-weight:600;
     cursor:pointer;white-space:nowrap}
-  .dl .appicon{width:24px;height:24px;border-radius:7px;display:block;object-fit:cover}
+  .appicon{width:24px;height:24px;border-radius:7px;display:block;object-fit:cover;flex:0 0 auto}
 
   .bar{display:flex;align-items:center;gap:10px;margin:12px 0 8px;flex:0 0 auto;
     font-size:12px;color:rgba(255,255,255,.8)}
@@ -123,7 +123,11 @@
   .nav{flex:0 0 auto;display:flex;gap:9px;margin:18px 0 0;
     padding-bottom:calc(18px + env(safe-area-inset-bottom))}
   .btn{font:inherit;font-weight:600;font-size:15.5px;background:#fff;color:var(--blue-700);
-    border:0;border-radius:999px;padding:14px 20px;cursor:pointer;flex:1 1 auto}
+    border:0;border-radius:999px;padding:14px 20px;cursor:pointer;flex:1 1 auto;
+    display:inline-flex;align-items:center;justify-content:center;gap:9px}
+  /* the app icon sits inside the pill, so trim the padding on that side to
+     keep the icon and label optically centred */
+  .btn.withicon{padding-left:12px}
   .btn:disabled{opacity:.4;cursor:not-allowed}
   .btn.ghost{flex:0 0 auto;background:none;color:#fff;border:1.5px solid rgba(255,255,255,.5);
     padding:14px 20px}
@@ -388,22 +392,34 @@ function countTo(el,n){
   setTimeout(step,200);
 }
 
+/* label the primary button, borrowing the app icon already inlined in the
+   header's download button rather than embedding the artwork a second time */
+function label(text,icon){
+  const b=$('next'), art=icon && document.querySelector('.dl .appicon');
+  b.classList.toggle('withicon',!!art);
+  if(art){
+    b.textContent='';
+    const im=new Image(); im.className='appicon'; im.src=art.src; im.alt='';
+    b.append(im,text);
+  } else b.textContent=text;
+}
+
 function buttons(){
   if(!$('start').hidden){
     $('back').hidden=true;
-    $('next').textContent="let's go"; $('next').disabled=false;
+    label("let's go"); $('next').disabled=false;
     return;
   }
   const answered = picked[i]!==null;
   if(ended){
     $('back').hidden=true;
-    $('next').textContent='Get glide'; $('next').disabled=false;
+    label('Get glide',true); $('next').disabled=false;
     return;
   }
   $('back').hidden=false; $('back').disabled=false;
   $('back').textContent='Back';
   $('next').disabled=!answered;
-  $('next').textContent = i===SPOTS.length-1 ? 'See your score' : 'Next spot';
+  label(i===SPOTS.length-1 ? 'See your score' : 'Next spot');
 }
 
 function result(){

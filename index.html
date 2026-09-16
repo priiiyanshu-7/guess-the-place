@@ -235,13 +235,18 @@ function openGlide(){
      separates it from a real desktop */
   const apple = /iPhone|iPad|iPod/i.test(ua) ||
                 (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
-  let url = LINKS.web;
-  if(apple && LINKS.ios) url = LINKS.ios;
-  else if(/Android/i.test(ua) && LINKS.android) url = LINKS.android;
-  /* the in-app browsers this gets shared into (instagram, whatsapp) often
-     swallow window.open, so navigate in place when it comes back blocked */
-  const w = window.open(url,'_blank','noopener');
-  if(!w) location.href = url;
+  let url = LINKS.web, store = false;
+  if(apple && LINKS.ios){ url = LINKS.ios; store = true; }
+  else if(/Android/i.test(ua) && LINKS.android){ url = LINKS.android; store = true; }
+
+  /* A store link has to navigate in place: that is what hands off to the App
+     Store or Play Store app, and window.open is unreliable inside the in-app
+     browsers this gets shared into. Do not try to detect a blocked popup by
+     checking the return value either - window.open returns null whenever
+     'noopener' is passed, so that test fires even when the tab did open. */
+  if(store){ location.href = url; return; }
+  const w = window.open(url,'_blank');
+  if(w) w.opener = null; else location.href = url;
 }
 
 const SPOTS=[

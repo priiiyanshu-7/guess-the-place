@@ -6,12 +6,13 @@
 <title>guess the spot | glide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Fraunces:ital,opsz,wght@0,9..144,400..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --blue:#1667E8; --blue-700:#0A3FA8; --blue-900:#062B75;
     --mist:#CFE0FF; --ink:#0C1220;
     --serif:'Fraunces',Georgia,serif;
+    --serif-clue:'DM Serif Text',Georgia,serif;
     --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
   }
   *{box-sizing:border-box}
@@ -53,7 +54,10 @@
   /* #rev is an empty div until answered; without this it still counts as a
      flex item and doubles the gap between the clue and the options */
   .pad > :empty{display:none}
-  .clue{font-family:var(--serif);font-size:clamp(15.5px,4.2vw,17.5px);line-height:1.4;margin:0}
+  /* DM Serif Text is denser and darker than Fraunces, so it gets a little more
+     leading to keep a 7-line clue from reading as a solid block */
+  .clue{font-family:var(--serif-clue);font-size:clamp(15.5px,4.2vw,17.5px);
+    line-height:1.46;margin:0}
 
   .rev{display:block}
   .rhead{display:flex;align-items:center;gap:9px;margin-bottom:8px}

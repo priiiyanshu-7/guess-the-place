@@ -133,6 +133,30 @@
     padding:14px 20px}
   .btn.ghost:disabled{opacity:.3}
 
+  /* the results CTA has to pull the eye on a screen with no other action:
+     it settles in after the score, then a slow halo and a sheen sweep on a
+     long cycle - noticeable in peripheral vision, not a flashing button */
+  .btn.cta{position:relative;overflow:hidden}
+  .btn.cta::after{content:"";position:absolute;top:0;bottom:0;left:-45%;width:40%;
+    pointer-events:none;transform:skewX(-18deg);opacity:0;
+    background:linear-gradient(100deg,transparent,rgba(22,103,232,.15),transparent)}
+  @media (prefers-reduced-motion:no-preference){
+    .btn.cta{animation:ctaIn .52s cubic-bezier(.2,.9,.3,1.25) .5s both,
+                       ctaHalo 3s ease-out 1.25s infinite}
+    .btn.cta::after{animation:ctaSheen 3s ease-in-out 1.6s infinite}
+  }
+  @keyframes ctaIn{from{opacity:0;transform:translateY(14px) scale(.95)}
+    to{opacity:1;transform:none}}
+  @keyframes ctaHalo{
+    0%{box-shadow:0 0 0 0 rgba(255,255,255,.5)}
+    34%{box-shadow:0 0 0 15px rgba(255,255,255,0)}
+    100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+  @keyframes ctaSheen{
+    0%{left:-45%;opacity:0}
+    6%{opacity:1}
+    26%{left:115%;opacity:1}
+    27%,100%{left:115%;opacity:0}}
+
   .start{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;padding:24px 0}
   .kicker{font-family:var(--serif);font-style:italic;font-size:13.5px;color:rgba(255,255,255,.7);
     margin:0 0 12px}
@@ -405,6 +429,7 @@ function label(text,icon){
 }
 
 function buttons(){
+  $('next').classList.toggle('cta',ended);
   if(!$('start').hidden){
     $('back').hidden=true;
     label("let's go"); $('next').disabled=false;
